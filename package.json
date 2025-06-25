@@ -22,7 +22,8 @@
   },
   "dependencies": {
     "commander": "^14.0.0",
-    "eslint": "^9.29.0"
+    "eslint": "^9.29.0",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^4.4.1"
