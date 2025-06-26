@@ -25,6 +25,7 @@ jobs:
 
       - name: Run tests
         run: npm run test:coverage
+
       - name: Проверка покрытия
         run: |
           echo "Папка coverage:"
@@ -37,8 +38,9 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-        args: >
-          -Dsonar.projectKey=backend-project-46
-          -Dsonar.organization=bugrich
-          -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-          -Dsonar.sources=src
+          projectBaseDir: .
+          args: >
+            -Dsonar.projectKey=backend-project-46
+            -Dsonar.organization=bugrich
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.sources=src
