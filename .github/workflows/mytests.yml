@@ -25,8 +25,20 @@ jobs:
 
       - name: Run tests
         run: npm run test:coverage
+      - name: Проверка покрытия
+        run: |
+          echo "Папка coverage:"
+          ls -la coverage
+          echo "Файл lcov.info (первые строки):"
+          head -n 20 coverage/lcov.info
 
       - name: SonarQube Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+        args: >
+          -Dsonar.projectKey=backend-project-46
+          -Dsonar.organization=bugrich
+          -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+          -Dsonar.sources=src
