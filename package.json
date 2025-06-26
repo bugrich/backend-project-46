@@ -15,7 +15,7 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "bin": {
     "gendiff": "bin/gendiff.js"
@@ -26,6 +26,7 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^4.4.1"
+    "@stylistic/eslint-plugin": "^5.0.0",
+    "jest": "^30.0.3"
   }
 }
