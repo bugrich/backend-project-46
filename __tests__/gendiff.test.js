@@ -1,10 +1,10 @@
-import { buildDiff, genDiff } from '../src/index.js'
+import { genDiff } from '../src/index.js'
 import { getFixturePath } from '../src/getFixturePath.js'
 
-test("gendiff's main flow", () => {
+test('gendiff\'s main flow', () => {
   const result = genDiff(
     getFixturePath('testfile1.json'),
-    getFixturePath('testfile2.json')
+    getFixturePath('testfile2.json'),
   )
   expect(result).toEqual(`{
   - follow: false
@@ -19,7 +19,7 @@ test("gendiff's main flow", () => {
 test('gendiff with yaml/yml files', () => {
   const result = genDiff(
     getFixturePath('testfile1.yml'),
-    getFixturePath('testfile2.yaml')
+    getFixturePath('testfile2.yaml'),
   )
 
   expect(result).toEqual(`{
@@ -35,11 +35,10 @@ test('gendiff with yaml/yml files', () => {
 test('gendiff recursive feature', () => {
   const result = genDiff(
     getFixturePath('recursiveTest1.json'),
-    getFixturePath('recursiveTest2.yml')
+    getFixturePath('recursiveTest2.yml'),
   )
-  console.log(result)
 
-  expect(result).toEqual(`{
+  expect(result).toStrictEqual(`{
     common: {
       + follow: false
         setting1: Value 1
@@ -52,7 +51,7 @@ test('gendiff recursive feature', () => {
         }
         setting6: {
             doge: {
-              - wow:
+              - wow: 
               + wow: so much
             }
             key: value
