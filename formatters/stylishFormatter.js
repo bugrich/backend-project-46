@@ -1,6 +1,10 @@
-import { isObject } from './isObject.js'
+import { isObject } from '../src/isObject.js'
 
-export function stylish(diffTree, depth = 1) {
+export function stylish(diffTree) {
+  return `{\n${formatStylish(diffTree)}\n}`
+}
+
+function formatStylish(diffTree, depth = 1) {
   // console.dir(diffTree, { depth: null })
 
   const indent = ' '.repeat(depth * 4 - 2)
@@ -15,7 +19,7 @@ export function stylish(diffTree, depth = 1) {
             return [
               `${indent}- ${key}: {\n${formatValue(
                 value,
-                depth + 1,
+                depth + 1
               )}\n${indent}  }`,
             ]
           return `${indent}- ${key}: ${formatValue(value)}`
@@ -25,7 +29,7 @@ export function stylish(diffTree, depth = 1) {
             return [
               `${indent}+ ${key}: {\n${formatValue(
                 value,
-                depth + 1,
+                depth + 1
               )}\n${indent}  }`,
             ]
           return `${indent}+ ${key}: ${formatValue(value)}`
@@ -35,21 +39,19 @@ export function stylish(diffTree, depth = 1) {
             return [
               `${indent}- ${key}: {\n${formatValue(
                 oldValue,
-                depth + 1,
+                depth + 1
               )}\n${indent}  }`,
               `${indent}+ ${key}: ${formatValue(newValue)}`,
             ]
-          }
-          else if (isObject(newValue)) {
+          } else if (isObject(newValue)) {
             return [
               `${indent}- ${key}: ${formatValue(oldValue)}`,
               `${indent}+ ${key}: {\n${formatValue(
                 newValue,
-                depth + 1,
+                depth + 1
               )}\n${indent}  }`,
             ]
-          }
-          else {
+          } else {
             /* else if (isObject(oldValue) && isObject(newValue)) {
             return [
               `${indent}- ${key}: {\n${formatValue(
@@ -73,16 +75,16 @@ export function stylish(diffTree, depth = 1) {
             return [
               `${indent}  ${key}: {\n${formatValue(
                 value,
-                depth + 1,
+                depth + 1
               )}\n${indent}  }`,
             ]
           return `${indent}  ${key}: ${value}`
 
         case 'nested':
           return [
-            `${indent}  ${key}: {\n${stylish(
+            `${indent}  ${key}: {\n${formatStylish(
               children,
-              depth + 1,
+              depth + 1
             )}\n${indent}  }`,
           ]
       }
@@ -103,14 +105,12 @@ function formatValue(value1, depth = 0) {
         if (isObject(value)) {
           const newValue = formatValue(value, depth + 1)
           return `${currentIndent}${key}: {\n${newValue}\n${currentIndent}}`
-        }
-        else {
+        } else {
           return `${currentIndent}${key}: ${value}`
         }
       })
       .join('\n')
-  }
-  else {
+  } else {
     return value1
   }
 }

@@ -1,19 +1,16 @@
 import _ from 'lodash'
 import parseFile from './parsers.js'
-import { stylish } from './formatters.js'
+import { stylish } from '../formatters/stylishFormatter.js'
 import { isObject } from './isObject.js'
+import { chooseFormat } from '../formatters/index.js'
 
-const formatMap = {
-  stylish,
-}
-
-export function genDiff(filepath1, filepath2, format = 'stylish') {
+export function genDiff(filepath1, filepath2, format) {
   const data1 = parseFile(filepath1)
   const data2 = parseFile(filepath2)
   const diffTree = buildDiff(data1, data2)
-  const formatter = formatMap[format]
+  const formatter = chooseFormat(format)
 
-  return `{\n${formatter(diffTree)}\n}`
+  return formatter(diffTree)
 }
 
 export function buildDiff(data1, data2) {
