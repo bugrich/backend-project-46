@@ -1,10 +1,10 @@
 import genDiff from '../src/index.js'
 import { getFixturePath } from '../src/getFixturePath.js'
 
-test("gendiff's main flow", () => {
+test('gendiff\'s main flow', () => {
   const result = genDiff(
     getFixturePath('testfile1.json'),
-    getFixturePath('testfile2.json')
+    getFixturePath('testfile2.json'),
   )
   expect(result).toEqual(`{
   - follow: false
@@ -19,7 +19,7 @@ test("gendiff's main flow", () => {
 test('gendiff with yaml/yml files', () => {
   const result = genDiff(
     getFixturePath('testfile1.yml'),
-    getFixturePath('testfile2.yaml')
+    getFixturePath('testfile2.yaml'),
   )
 
   expect(result).toEqual(`{
@@ -36,7 +36,7 @@ test('gendiff recursive and stylish feature', () => {
   const result = genDiff(
     getFixturePath('recursiveTest1.json'),
     getFixturePath('recursiveTest2.yml'),
-    'stylish'
+    'stylish',
   )
 
   expect(result).toStrictEqual(`{
@@ -89,7 +89,7 @@ test('gendiff plain format feature', () => {
   const result = genDiff(
     getFixturePath('recursiveTest1.json'),
     getFixturePath('recursiveTest2.yml'),
-    'plain'
+    'plain',
   )
 
   expect(result)
@@ -110,11 +110,11 @@ test('gendiff json format', () => {
   const result = genDiff(
     getFixturePath('recursiveTest1.json'),
     getFixturePath('recursiveTest2.yml'),
-    'json'
+    'json',
   )
 
-  const expected =
-    '[{"key":"common","type":"nested","children":[{"key":"follow","type":"added","value":false},{"key":"setting1","type":"unchanged","value":"Value 1"},{"key":"setting2","type":"removed","value":200},{"key":"setting3","type":"updated","oldValue":true,"newValue":null},{"key":"setting4","type":"added","value":"blah blah"},{"key":"setting5","type":"added","value":{"key5":"value5"}},{"key":"setting6","type":"nested","children":[{"key":"doge","type":"nested","children":[{"key":"wow","type":"updated","oldValue":"","newValue":"so much"}]},{"key":"key","type":"unchanged","value":"value"},{"key":"ops","type":"added","value":"vops"}]}]},{"key":"group1","type":"nested","children":[{"key":"baz","type":"updated","oldValue":"bas","newValue":"bars"},{"key":"foo","type":"unchanged","value":"bar"},{"key":"nest","type":"updated","oldValue":{"key":"value"},"newValue":"str"}]},{"key":"group2","type":"removed","value":{"abc":12345,"deep":{"id":45}}},{"key":"group3","type":"added","value":{"deep":{"id":{"number":45}},"fee":100500}}]'
+  const expected
+    = '[{"key":"common","type":"nested","children":[{"key":"follow","type":"added","value":false},{"key":"setting1","type":"unchanged","value":"Value 1"},{"key":"setting2","type":"removed","value":200},{"key":"setting3","type":"updated","oldValue":true,"newValue":null},{"key":"setting4","type":"added","value":"blah blah"},{"key":"setting5","type":"added","value":{"key5":"value5"}},{"key":"setting6","type":"nested","children":[{"key":"doge","type":"nested","children":[{"key":"wow","type":"updated","oldValue":"","newValue":"so much"}]},{"key":"key","type":"unchanged","value":"value"},{"key":"ops","type":"added","value":"vops"}]}]},{"key":"group1","type":"nested","children":[{"key":"baz","type":"updated","oldValue":"bas","newValue":"bars"},{"key":"foo","type":"unchanged","value":"bar"},{"key":"nest","type":"updated","oldValue":{"key":"value"},"newValue":"str"}]},{"key":"group2","type":"removed","value":{"abc":12345,"deep":{"id":45}}},{"key":"group3","type":"added","value":{"deep":{"id":{"number":45}},"fee":100500}}]'
 
   expect(result).toStrictEqual(expected)
 })
