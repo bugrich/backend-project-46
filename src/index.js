@@ -3,7 +3,7 @@ import { parseFile } from './parsers.js'
 import { isObject } from './isObject.js'
 import { getFormatter } from './formatters/index.js'
 
-export function genDiff(filepath1, filepath2, format) {
+export default function genDiff(filepath1, filepath2, format) {
   const data1 = parseFile(filepath1)
   const data2 = parseFile(filepath2)
   const diffTree = buildDiff(data1, data2)
