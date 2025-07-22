@@ -1,14 +1,13 @@
 import _ from 'lodash'
-import parseFile from './parsers.js'
-import { stylish } from '../formatters/stylishFormatter.js'
+import { parseFile } from './parsers.js'
 import { isObject } from './isObject.js'
-import { chooseFormat } from '../formatters/index.js'
+import { getFormatter } from './formatters/index.js'
 
 export function genDiff(filepath1, filepath2, format) {
   const data1 = parseFile(filepath1)
   const data2 = parseFile(filepath2)
   const diffTree = buildDiff(data1, data2)
-  const formatter = chooseFormat(format)
+  const formatter = getFormatter(format)
 
   return formatter(diffTree)
 }
@@ -44,25 +43,4 @@ export function buildDiff(data1, data2) {
 
     return { key, type: 'unchanged', value: value1 }
   })
-}
-
-export const genDiff1 = (filepath1, filepath2) => {
-  const file1Data = parseFile(filepath1)
-  const file2Data = parseFile(filepath2)
-
-  const keys = _.sortBy([
-    ...new Set([...Object.keys(file1Data), ...Object.keys(file2Data)]),
-  ])
-
-  const difference = keys
-    .map((key) => {
-      if (!(key in file2Data)) return `  - ${key}: ${file1Data[key]}`
-      if (!(key in file1Data)) return `  + ${key}: ${file2Data[key]}`
-      if (file1Data[key] !== file2Data[key])
-        return `  - ${key}: ${file1Data[key]}\n  + ${key}: ${file2Data[key]}`
-      return `    ${key}: ${file1Data[key]}`
-    })
-    .join('\n')
-
-  return `{\n${difference}\n}`
 }

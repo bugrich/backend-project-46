@@ -1,25 +1,24 @@
-import { isObject } from '../src/isObject.js'
+import { isObject } from '../isObject.js'
+
+const INDENT_NUMBER = 4
 
 export function stylish(diffTree) {
   return `{\n${formatStylish(diffTree)}\n}`
 }
 
 function formatStylish(diffTree, depth = 1) {
-  // console.dir(diffTree, { depth: null })
-
-  const indent = ' '.repeat(depth * 4 - 2)
+  const LEFT_INDENTATION = 2
+  const indent = ' '.repeat(depth * INDENT_NUMBER - LEFT_INDENTATION)
 
   const formattedDiff = diffTree
-    .flatMap((node) => {
-      const { type, key, children, value, newValue, oldValue } = node
-
+    .flatMap(({ type, key, children, value, oldValue, newValue }) => {
       switch (type) {
         case 'removed':
           if (isObject(value))
             return [
               `${indent}- ${key}: {\n${formatValue(
                 value,
-                depth + 1
+                depth + 1,
               )}\n${indent}  }`,
             ]
           return `${indent}- ${key}: ${formatValue(value)}`
@@ -29,41 +28,43 @@ function formatStylish(diffTree, depth = 1) {
             return [
               `${indent}+ ${key}: {\n${formatValue(
                 value,
-                depth + 1
+                depth + 1,
               )}\n${indent}  }`,
             ]
           return `${indent}+ ${key}: ${formatValue(value)}`
 
         case 'updated':
-          if (isObject(oldValue)) {
+          if (isObject(oldValue) && isObject(newValue)) {
             return [
               `${indent}- ${key}: {\n${formatValue(
                 oldValue,
-                depth + 1
+                depth + 1,
+              )}\n${indent}  }`,
+              `${indent}+ ${key}: {\n${formatValue(
+                newValue,
+                depth + 1,
+              )}\n${indent}  }`,
+            ]
+          }
+          else if (isObject(oldValue)) {
+            return [
+              `${indent}- ${key}: {\n${formatValue(
+                oldValue,
+                depth + 1,
               )}\n${indent}  }`,
               `${indent}+ ${key}: ${formatValue(newValue)}`,
             ]
-          } else if (isObject(newValue)) {
+          }
+          else if (isObject(newValue)) {
             return [
               `${indent}- ${key}: ${formatValue(oldValue)}`,
               `${indent}+ ${key}: {\n${formatValue(
                 newValue,
-                depth + 1
-              )}\n${indent}  }`,
-            ]
-          } else {
-            /* else if (isObject(oldValue) && isObject(newValue)) {
-            return [
-              `${indent}- ${key}: {\n${formatValue(
-                oldValue,
-                depth + 1,
-              )}\n${indent}  }`,
-              `${indent}+ ${key}: {\n${formatValue(
-                newValue,
                 depth + 1,
               )}\n${indent}  }`,
             ]
-          } */
+          }
+          else {
             return [
               `${indent}- ${key}: ${formatValue(oldValue)}`,
               `${indent}+ ${key}: ${formatValue(newValue)}`,
@@ -75,7 +76,7 @@ function formatStylish(diffTree, depth = 1) {
             return [
               `${indent}  ${key}: {\n${formatValue(
                 value,
-                depth + 1
+                depth + 1,
               )}\n${indent}  }`,
             ]
           return `${indent}  ${key}: ${value}`
@@ -84,33 +85,32 @@ function formatStylish(diffTree, depth = 1) {
           return [
             `${indent}  ${key}: {\n${formatStylish(
               children,
-              depth + 1
+              depth + 1,
             )}\n${indent}  }`,
           ]
       }
     })
     .join('\n')
-  // console.log(formattedDiff)
   return formattedDiff
 }
 
-function formatValue(value1, depth = 0) {
-  const currentIndent = ' '.repeat(depth * 4)
-  // console.log(value1)
+function formatValue(value, depth = 0) {
+  const currentIndent = ' '.repeat(depth * INDENT_NUMBER)
 
-  if (isObject(value1)) {
-    const entries = Object.entries(value1)
-    return entries
-      .map(([key, value]) => {
-        if (isObject(value)) {
-          const newValue = formatValue(value, depth + 1)
-          return `${currentIndent}${key}: {\n${newValue}\n${currentIndent}}`
-        } else {
-          return `${currentIndent}${key}: ${value}`
+  if (isObject(value)) {
+    return Object.entries(value)
+      .map(([k, v]) => {
+        if (isObject(v)) {
+          const newValue = formatValue(v, depth + 1)
+          return `${currentIndent}${k}: {\n${newValue}\n${currentIndent}}`
+        }
+        else {
+          return `${currentIndent}${k}: ${v}`
         }
       })
       .join('\n')
-  } else {
-    return value1
+  }
+  else {
+    return value
   }
 }

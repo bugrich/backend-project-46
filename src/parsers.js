@@ -2,7 +2,7 @@ import yaml from 'js-yaml'
 import path from 'path'
 import { getFileData } from './getFileData.js'
 
-export default function parseFile(filepath) {
+export function parseFile(filepath) {
   const extension = path.extname(filepath)
   const data = getFileData(filepath)
 
